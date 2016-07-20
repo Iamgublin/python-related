@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonApplication1", "PythonApplication1\PythonApplication1.pyproj", "{66D94788-88FE-4367-AFAD-A73C38C430AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Win7 Debug|Any CPU = Win7 Debug|Any CPU
+		Win7 Debug|Win32 = Win7 Debug|Win32
+		Win7 Debug|x64 = Win7 Debug|x64
+		Win7 Release|Any CPU = Win7 Release|Any CPU
+		Win7 Release|Win32 = Win7 Release|Win32
+		Win7 Release|x64 = Win7 Release|x64
+		Win8 Debug|Any CPU = Win8 Debug|Any CPU
+		Win8 Debug|Win32 = Win8 Debug|Win32
+		Win8 Debug|x64 = Win8 Debug|x64
+		Win8 Release|Any CPU = Win8 Release|Any CPU
+		Win8 Release|Win32 = Win8 Release|Win32
+		Win8 Release|x64 = Win8 Release|x64
+		Win8.1 Debug|Any CPU = Win8.1 Debug|Any CPU
+		Win8.1 Debug|Win32 = Win8.1 Debug|Win32
+		Win8.1 Debug|x64 = Win8.1 Debug|x64
+		Win8.1 Release|Any CPU = Win8.1 Release|Any CPU
+		Win8.1 Release|Win32 = Win8.1 Release|Win32
+		Win8.1 Release|x64 = Win8.1 Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Release|Win32.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Release|x64.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Debug|Win32.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Debug|x64.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Release|Win32.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win7 Release|x64.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Debug|Win32.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Debug|x64.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Release|Win32.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8 Release|x64.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Debug|Win32.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Debug|x64.ActiveCfg = Debug|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Release|Win32.ActiveCfg = Release|Any CPU
+		{66D94788-88FE-4367-AFAD-A73C38C430AC}.Win8.1 Release|x64.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
