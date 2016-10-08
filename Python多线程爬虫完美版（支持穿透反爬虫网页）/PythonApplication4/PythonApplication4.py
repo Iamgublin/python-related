@@ -1,24 +1,26 @@
-ï»¿import urllib
+#coding=utf-8 
 import urllib2
 import re
 import time
-import thread
+import threading
+import Queue
 from bs4 import BeautifulSoup
 import urlparse
 from selenium import webdriver
-mode=1                                       #0:ç®€å•æ¨¡å¼ é€Ÿåº¦å¿«    #1è™šæ‹Ÿæµè§ˆå™¨æ¨¡å¼ï¼šç©¿é€åçˆ¬è™«ï¼Œä½†é€Ÿåº¦æ…¢
-fliter=re.compile("\.(jpg|gif|bmp|png)")    #å›¾ç‰‡æ­£åˆ™è¿‡æ»¤
+mode=1                                       #0:¼òµ¥Ä£Ê½ ËÙ¶È¿ì    #1ĞéÄâä¯ÀÀÆ÷Ä£Ê½£º´©Í¸·´ÅÀ³æ£¬µ«ËÙ¶ÈÂı
+fliter=re.compile("\.(jpg|gif|bmp|png)")    #Í¼Æ¬ÕıÔò¹ıÂË
 hasvisited=[]
-needtovisited=[]
-threadcount=10                                #çº¿ç¨‹æ•°
-spinlock=0
-base="http://image.baidu.com"
-url='http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%B1%C8%BB%F9%C4%E1&hs=0&fr=ala&ori_query=%E6%AF%94%E5%9F%BA%E5%B0%BC&ala=0&alatpl=sp&pos=0'
+needtovisited=Queue.Queue(1000)
+threadcount=4                                #Ïß³ÌÊı
+threadpool=Queue.Queue(threadcount)
+base="http://image.baidu.com"                  #Èç¹ûmeta¡ªbaseÎª¿ÕÊ±ÇëÖÃÎªÎª¿Õ
+url='http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%CE%E5%D2%D8%B4%F3%D1%A7%CD%BC%C6%AC&hs=0&fr=ala&ori_query=%E4%BA%94%E9%82%91%E5%A4%A7%E5%AD%A6%E5%9B%BE%E7%89%87&ala=0&alatpl=sp&pos=0'
 headers={'referer':'http://www.baidu.com/', 'user-agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'}
 x=0
 def download(url):
     try:
         global x
+        global spinlock
         req=urllib2.Request(url,None,headers)
         te=urllib2.urlopen(req,timeout=5)
         temp1=fliter.findall(url)
@@ -37,15 +39,16 @@ def findphoto(bs,url):
     jieguo=bs.findAll(name ="img",attrs={"src":re.compile(r"^http://")})  #re.compile(r"^http://")
     for temp in jieguo:
         print "find picture %s"% temp["src"]
+        print threading._get_ident()
         if(re.compile(r"http://").findall(temp["src"])):
-            download(temp["src"])                            #ä¸‹è½½æ–¹å¼ä¸€
+            download(temp["src"])                            #ÏÂÔØ·½Ê½Ò»
         else:
             print "\n\n\n\n\n\n\n"
             b=urlparse.urlparse(url)
             tempurl=b[0]+r"://"+b[1]+r"/"+temp["src"]
             print tempurl
             download(tempurl)
-        #urllib.urlretrieve(temp["src"].encode("gb2312"),'%s.%s' %(x,temp["src"][-3:]))    #ä¸‹è½½æ–¹å¼äºŒ
+        #urllib.urlretrieve(temp["src"].encode("gb2312"),'%s.%s' %(x,temp["src"][-3:]))    #ÏÂÔØ·½Ê½¶ş
 def openurlbystatic(url):
     req=urllib2.Request(url,None,headers)
     repeat_time = 0
@@ -70,19 +73,8 @@ def openurlbybrowner(url):
     except:
         return None
 def findurl(url):
-    global spinlock
-    if url in hasvisited:
-        return
-    if(fliter.findall(url)):                        #æœ‰æ—¶å€™å›¾ç‰‡å¯èƒ½ç›´æ¥åœ¨aæ ‡ç­¾é‡Œ
-        spinlock.acquire()
-        hasvisited.append(url)
-        spinlock.release()
+    if(fliter.findall(url)):                        #ÓĞÊ±ºòÍ¼Æ¬¿ÉÄÜÖ±½ÓÔÚa±êÇ©Àï
         download(url)
-        return 
-    else:
-        spinlock.acquire()
-        hasvisited.append(url)
-        spinlock.release()
     global mode
     if(mode==0):
         res=openurlbystatic(url)
@@ -98,24 +90,41 @@ def findurl(url):
         return 
     if(html==None):
         return
-    findphoto(html,url)                          #åªåˆ†æç½‘å€æ—¶æ³¨é‡Šæ­¤å¥
-    article = html.findAll(name ="a",attrs={"href":re.compile(r"^.*/search/")})   #è¿‡æ»¤è§„åˆ™  # re.compile(r"^http://")   re.compile(r".*//.*")
+    findphoto(html,url)                          #Ö»·ÖÎöÍøÖ·Ê±×¢ÊÍ´Ë¾ä
+    article = html.findAll(name ="a",attrs={"href":re.compile(r"^.*/search/")})   #¹ıÂË¹æÔò  # re.compile(r"^http://")   re.compile(r".*//.*")
     try:
         for temp in article:
             if temp["href"] not in hasvisited:
                 global base
                 temp["href"]=base+temp["href"]
-                print temp["href"]
-                findurl(temp["href"])
+                needtovisited.put(temp["href"])
     except:
         pass
+    threadpool.get()
+def threadpoolroutine():
+    global threadcount
+    global needtovisited
+    global hasvisited
+    print "pool enter\n\n\n"
+    while(1):
+        url=needtovisited.get()
+        if url not in hasvisited:
+            print "find url"
+            threadpool.put("a")
+            thread=threading.Thread(target=findurl,args=(url,))
+            hasvisited.append(url)
+            thread.start()
+        else:
+            pass
 def main():
     global spinlock
-    sum=0
-    spinlock=thread.allocate_lock()
-    while sum<threadcount:
-        thread.start_new_thread(findurl,(url,))
-        sum=sum+1
-    time.sleep(100)
+    spinlock=threading.RLock()
+    pool=threading.Thread(target=threadpoolroutine)
+    threadpool.put("a")
+    findurl(url)
+
+    pool.start()
+    pool.join()
+
 if(__name__=="__main__"):
     main()
