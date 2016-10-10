@@ -1,5 +1,4 @@
-#coding=utf-8 
-import urllib2
+ï»¿import urllib2
 import re
 import time
 import threading
@@ -7,14 +6,14 @@ import Queue
 from bs4 import BeautifulSoup
 import urlparse
 from selenium import webdriver
-mode=1                                       #0:¼òµ¥Ä£Ê½ ËÙ¶È¿ì    #1ĞéÄâä¯ÀÀÆ÷Ä£Ê½£º´©Í¸·´ÅÀ³æ£¬µ«ËÙ¶ÈÂı
-fliter=re.compile("\.(jpg|gif|bmp|png)")    #Í¼Æ¬ÕıÔò¹ıÂË
+mode=1                                       #0:ç®€å•æ¨¡å¼ é€Ÿåº¦å¿«    #1è™šæ‹Ÿæµè§ˆå™¨æ¨¡å¼ï¼šç©¿é€åçˆ¬è™«ï¼Œä½†é€Ÿåº¦æ…¢
+fliter=re.compile("\.(jpg|gif|bmp|png)")    #å›¾ç‰‡æ­£åˆ™è¿‡æ»¤
 hasvisited=[]
 needtovisited=Queue.Queue(1000)
-threadcount=4                                #Ïß³ÌÊı
+threadcount=20                                #çº¿ç¨‹æ•°
 threadpool=Queue.Queue(threadcount)
-base="http://image.baidu.com"                  #Èç¹ûmeta¡ªbaseÎª¿ÕÊ±ÇëÖÃÎªÎª¿Õ
-url='http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%CE%E5%D2%D8%B4%F3%D1%A7%CD%BC%C6%AC&hs=0&fr=ala&ori_query=%E4%BA%94%E9%82%91%E5%A4%A7%E5%AD%A6%E5%9B%BE%E7%89%87&ala=0&alatpl=sp&pos=0'
+base="http://image.baidu.com"                  #å¦‚æœmetaâ€”baseä¸ºç©ºæ—¶è¯·ç½®ä¸ºä¸ºç©º
+url='http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%B7%E7%BE%B0&hs=0&fr=ala&ori_query=%E9%A3%8E%E6%99%AF&ala=0&alatpl=sp&pos=0'
 headers={'referer':'http://www.baidu.com/', 'user-agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'}
 x=0
 def download(url):
@@ -41,14 +40,22 @@ def findphoto(bs,url):
         print "find picture %s"% temp["src"]
         print threading._get_ident()
         if(re.compile(r"http://").findall(temp["src"])):
-            download(temp["src"])                            #ÏÂÔØ·½Ê½Ò»
+            download(temp["src"])                            #ä¸‹è½½æ–¹å¼ä¸€
         else:
             print "\n\n\n\n\n\n\n"
             b=urlparse.urlparse(url)
             tempurl=b[0]+r"://"+b[1]+r"/"+temp["src"]
             print tempurl
             download(tempurl)
-        #urllib.urlretrieve(temp["src"].encode("gb2312"),'%s.%s' %(x,temp["src"][-3:]))    #ÏÂÔØ·½Ê½¶ş
+        #urllib.urlretrieve(temp["src"].encode("gb2312"),'%s.%s' %(x,temp["src"][-3:]))    #ä¸‹è½½æ–¹å¼äºŒ
+def findbaiduphoto(bs,url):
+    try:
+        jieguo=bs.findAll(name ="li",attrs={"class":"imgitem"})
+        for temp in jieguo:
+            print "find picture %s"% temp["data-objurl"]
+            download(temp["data-objurl"])
+    except:
+        pass     
 def openurlbystatic(url):
     req=urllib2.Request(url,None,headers)
     repeat_time = 0
@@ -73,7 +80,7 @@ def openurlbybrowner(url):
     except:
         return None
 def findurl(url):
-    if(fliter.findall(url)):                        #ÓĞÊ±ºòÍ¼Æ¬¿ÉÄÜÖ±½ÓÔÚa±êÇ©Àï
+    if(fliter.findall(url)):                        #æœ‰æ—¶å€™å›¾ç‰‡å¯èƒ½ç›´æ¥åœ¨aæ ‡ç­¾é‡Œ
         download(url)
     global mode
     if(mode==0):
@@ -90,8 +97,9 @@ def findurl(url):
         return 
     if(html==None):
         return
-    findphoto(html,url)                          #Ö»·ÖÎöÍøÖ·Ê±×¢ÊÍ´Ë¾ä
-    article = html.findAll(name ="a",attrs={"href":re.compile(r"^.*/search/")})   #¹ıÂË¹æÔò  # re.compile(r"^http://")   re.compile(r".*//.*")
+    #findphoto(html,url)                          #åªåˆ†æç½‘å€æ—¶æ³¨é‡Šæ­¤å¥
+    findbaiduphoto(html,url)                       #é’ˆå¯¹ç™¾åº¦é‡èº«æ‰“é€ 
+    article = html.findAll(name ="a",attrs={"href":re.compile(r"^.*/search/")})   #è¿‡æ»¤è§„åˆ™  # re.compile(r"^http://")   re.compile(r".*//.*")
     try:
         for temp in article:
             if temp["href"] not in hasvisited:
