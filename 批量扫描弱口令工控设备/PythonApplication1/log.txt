@@ -1,2 +1,0 @@
-http://59.37.163.154:81/PSIA/Custom/SelfExt/userCheck
-http://183.237.29.124:8081/PSIA/Custom/SelfExt/userCheck
