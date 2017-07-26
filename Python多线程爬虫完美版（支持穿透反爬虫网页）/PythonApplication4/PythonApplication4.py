@@ -13,7 +13,7 @@ needtovisited=Queue.Queue(1000)
 threadcount=20                                #线程数
 threadpool=Queue.Queue(threadcount)
 base="http://image.baidu.com"                  #如果meta—base为空时请置为为空
-url='http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%B7%E7%BE%B0&hs=0&fr=ala&ori_query=%E9%A3%8E%E6%99%AF&ala=0&alatpl=sp&pos=0'
+url=''
 headers={'referer':'http://www.baidu.com/', 'user-agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'}
 x=0
 def download(url):
